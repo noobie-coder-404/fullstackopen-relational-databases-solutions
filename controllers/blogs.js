@@ -7,31 +7,32 @@ import { Blog, User } from "../models/index.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { Op } from "sequelize";
+import { blogFinder, tokenExtractor } from "../utils/middleware.js";
 const router = express.Router();
 
-const blogFinder = async (req, res, next) => {
-  const blog = await Blog.findByPk(req.params.id);
-  if (!blog) {
-    return res.status(404).end();
-  }
-  req.blog = blog;
-  next();
-};
+// const blogFinder = async (req, res, next) => {
+//   const blog = await Blog.findByPk(req.params.id);
+//   if (!blog) {
+//     return res.status(404).end();
+//   }
+//   req.blog = blog;
+//   next();
+// };
 
-const tokenExtractor = (req, res, next) => {
-  const authorization = req.get("authorization");
+// const tokenExtractor = (req, res, next) => {
+//   const authorization = req.get("authorization");
 
-  if (authorization && authorization.toLowerCase().startsWith("bearer")) {
-    try {
-      req.decodedToken = jwt.verify(authorization.split(" ")[1], SECRET);
-    } catch (error) {
-      return res.status(401).json({ error: "invalid token" });
-    }
-  } else {
-    return res.status(400).json("token not found");
-  }
-  next();
-};
+//   if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+//     try {
+//       req.decodedToken = jwt.verify(authorization.split(" ")[1], SECRET);
+//     } catch (error) {
+//       return res.status(401).json({ error: "invalid token" });
+//     }
+//   } else {
+//     return res.status(400).json("token not found");
+//   }
+//   next();
+// };
 
 // GET all users (Maps to /api/users)
 router.get("/", async (req, res, next) => {

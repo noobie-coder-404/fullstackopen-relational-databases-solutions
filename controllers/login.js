@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../utils/config.js";
-import { User } from "../models/index.js";
+import { User, Session } from "../models/index.js";
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
@@ -18,6 +18,10 @@ router.post("/", async (req, res, next) => {
     if (!user) return res.status(401).end();
 
     const token = jwt.sign({ username: user.username, id: user.id }, SECRET);
+    await Session.create({
+      userId: user.id,
+      token: token,
+    });
     return res
       .status(200)
       .json({ token, username: user.username, name: user.name });
